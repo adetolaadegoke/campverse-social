@@ -1,26 +1,30 @@
 # CAMPVERSE
 
-**Every Campus. One Universe.** A student social web starter for participating Nigerian private universities.
+**Every Campus. One Universe.** A student social app concept for participating Nigerian universities.
 
-## Run locally on Windows
+## Try the public preview
 
-Requirements: Node.js 24+ (built-in SQLite). Docker Desktop is needed only for PostgreSQL.
+[Open CAMPVERSE](https://adetolaadegoke.github.io/campverse-social/)
 
-1. In the project folder run `npm install`.
-2. Open two PowerShell windows in the folder. Run `npm run api:dev` in one and `npm run dev` in the other.
-3. Open the Vite address, usually http://localhost:5173.
+This is a public visual preview with sample content. Accounts and shared posts are not enabled on the hosted preview yet. Those features need a hosted API and database. Never enter a real password or private student information in a demo.
 
-The local API creates `server/data/campverse-dev.sqlite` automatically. Accounts, profiles, text posts, comments, follows, likes, reports and notifications persist locally. No API packages, Docker or external credentials are needed for local development.
+## Run the full local prototype
 
-For PostgreSQL setup, copy `.env.example` to `.env` and `server/.env.example` to `server/.env`, set fresh local secrets, start Docker Desktop, run `npm run db:up`, then install server dependencies with `npm --prefix server install`. The schema loads when the database volume is created for the first time.
+Requirements: Node.js 24+.
+
+1. Download the latest source bundle: [campverse-source-v4.zip](https://github.com/adetolaadegoke/campverse-social/blob/main/campverse-source-v4.zip)
+2. Extract it and open PowerShell in the extracted folder.
+3. Run `npm install`.
+4. In two PowerShell windows, run `npm run api:dev` and `npm run dev`.
+5. Open http://localhost:5173.
+
+The local API uses built-in SQLite and stores accounts, profiles, posts, comments, follows, likes, reports and notifications on that computer. It needs no external credentials.
 
 ## Current status
 
-- Responsive web app with sample feed, registration/login, post composer, comments, follow/unfollow, profile view/edit and notifications.
-- Local API with SQLite, scrypt password hashes, signed JWT sessions, accounts, social features, health check and request limits.
-- PostgreSQL API starter and schema for universities, profiles, verification, social content, messages, calls, live rooms, gifts, wallet ledger and moderation.
-- Not implemented: email/admission verification workflows, admin UI, real media storage, real-time chat, interactive stories, calls, live streaming, payments/gifts, native apps and production deployment.
+- Responsive CAMPVERSE web interface with sample campus feed, sign-up/sign-in, post composer, comments, follow/unfollow, editable profiles and notifications in the local prototype.
+- Local Node API with SQLite, password hashing, signed sessions and rate limits.
+- PostgreSQL API starter and schema for future deployment.
+- Still to build and configure for a public production app: hosted persistent database/API, email verification, university approval/admin workflows, private media storage, real-time messaging, calls, live rooms and payments.
 
-Local mode is for development. Use sample content only for demos. Do not commit `.env` files or real student data. Production needs secure sessions, verification, private media storage, migrations, backups, monitoring and external provider setup. Payments and creator payouts are not enabled.
-
-Latest source bundle: `campverse-source-v2.zip`.
+The Pages demo only renders sample content; authentication and shared interactions require the hosted backend. Payment, admission document uploads and creator payouts are not enabled. Do not commit secrets or real student data.
