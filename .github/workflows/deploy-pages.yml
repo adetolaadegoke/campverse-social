@@ -28,8 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: source/package-lock.json
       - name: Extract app source
         run: unzip -o campverse-source-v3.zip -d source
       - name: Install packages and build app
