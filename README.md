@@ -1,55 +1,37 @@
 # CAMPVERSE
 
-**Every Campus. One Universe.** A dark, gold-accented campus social product for students at participating Nigerian private universities.
+**Every Campus. One Universe.** A student social web starter for participating Nigerian private universities.
 
-## What is in this project
+## Run locally on Windows
 
-- Responsive Vite web app / installable PWA shell with an original campus feed, stories rail, trending cards and event card.
-- Working client-side interactions for navigation, composing a text post, likes, saves and feedback messages. Demo posts are sample interface data and are not persisted.
-- Express API starter with registration, login, public post listing, authenticated text-post creation, likes, reports, rate limiting and Helmet headers.
-- PostgreSQL relational schema covering the main account, university, verification, social, messaging, calls, live, gift, wallet, notification and moderation entities.
-- Environment variable examples and setup notes.
+Requirements: Node.js 24+ for the built-in SQLite development API. Docker Desktop is only needed for the PostgreSQL setup.
 
-## Run the web app
+1. In the project folder run:
 
-Requires Node.js 20 or later.
+   ```powershell
+   npm install
+   ```
 
-```sh
-npm install
-npm run dev
-```
+2. Open two PowerShell windows in the project folder. Run `npm run api:dev` in one and `npm run dev` in the other.
+3. Open the Vite address, usually `http://localhost:5173`.
 
-## Run the API
+The local API uses Node's built-in SQLite module and creates `server/data/campverse-dev.sqlite` automatically. Accounts and text posts persist locally; no API npm packages, Docker, or external credentials are needed for this development mode. This mode is for local development only.
 
-Create a PostgreSQL database, then apply `db/schema.sql`. Copy `server/.env.example` to `server/.env`, set a long random `JWT_SECRET` and your `DATABASE_URL`, and configure `WEB_ORIGIN`.
+To switch to PostgreSQL, copy `.env.example` to `.env` and `server/.env.example` to `server/.env`, set fresh local secrets, start Docker Desktop, then run `npm run db:up` and install the Express API dependencies with `npm --prefix server install`. The PostgreSQL schema loads when the database volume is first created.
 
-```sh
-cd server
-npm install
-npm run dev
-```
+The database schema in `db/schema.sql` is applied automatically when Docker creates the PostgreSQL volume the first time. To reset a local development database, stop the stack with `npm run db:down`; use `docker compose down -v` only when you intend to erase all local database data.
 
-The health endpoint is `GET /api/health`. Do not use sample content as real student data.
+## Current status
 
-## Delivery status
+- **Web app:** responsive CAMPVERSE UI, sample feed, navigation, stories rail, compose flow, registration and login forms.
+- **Local API:** Node's built-in HTTP and SQLite modules with scrypt password hashes, signed JWT sessions, registration/login, post feed, text-post creation, likes, reports, health check and request limits.
+- **PostgreSQL API:** Express/PostgreSQL starter in `server/src/index.js`, prepared for the schema and protected verification queue route.
+- **Database:** initial PostgreSQL schema for universities, profiles, verifications, posts, social graph, stories, messages, calls, live rooms, gifts, wallet ledger, notifications and moderation.
+- **Persistence:** real accounts and posts work only after PostgreSQL is running and the API is configured. Never use sample content as real student data.
+- **Not implemented yet:** email verification, admission document upload/review actions, admin UI, university directory management, comments, real media upload, real-time chat, stories, calls, live streaming, payment and gifts, native Android/iOS apps, production deployment, and automated tests.
 
-| Area | Status |
-| --- | --- |
-| Responsive web interface / PWA manifest | Implemented as a runnable frontend shell; install behavior and cross-browser QA still need verification |
-| Demo feed, navigation, composer, likes and saved feedback | Implemented in browser memory only; no persistence or media upload |
-| API registration/login and text posts | Implemented as starter routes; requires configured PostgreSQL and production security review |
-| PostgreSQL schema | Initial schema provided; migrations, row-level access policies and backup/restore procedures remain to be added |
-| Email verification and admission document workflow | Awaiting email provider, private object storage and reviewer workflow |
-| Admin dashboard and university management | Not implemented |
-| Realtime messaging, stories, short-video upload, calls and live streaming | Not implemented; requires realtime and media providers |
-| Wallet, Paystack, gifts, real-money payment or creator payouts | Not implemented; intentionally requires legal, compliance and provider review before launch |
-| Native Android/iOS applications | Not implemented |
-| Production deployment and automated test suite | Not configured or verified |
+The frontend calls the API configured by `VITE_API_URL` (defaults to the local development API). The browser session stores the short-lived UI token in `sessionStorage`; production should move to a reviewed secure session design, add email verification, authorization tests, migrations, backups and monitoring.
 
-## Security notes
+## Safety and launch notes
 
-Admission documents and media should use private object storage and short-lived signed access. Never serve verification files from a public bucket. The API uses parameterized SQL, password hashing, JWT bearer tokens, Helmet and a basic IP rate limit; production deployment still needs email verification, refresh/session revocation, CSRF strategy for cookie auth, audit review, authorization tests, secret rotation, TLS, backups and monitoring. JWT secret and database credentials must remain outside source control.
-
-## Before a real launch
-
-Complete the unfinished features above, add migrations and automated tests, review Nigerian privacy and payment requirements, configure providers, perform security review, and test on supported mobile and desktop browsers. No external integration is represented as live in this starter.
+Admission documents and media must use private object storage with short-lived signed access. Payment and creator payouts are not enabled; complete legal, provider and compliance review before considering real-money flows. Do not commit `.env` files or real student data. No external provider integration is represented as active.
